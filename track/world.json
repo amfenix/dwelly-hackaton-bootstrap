@@ -1,0 +1,15 @@
+{
+  "_about": "A made-up letting agency for the example track. Every name and number is fictional.",
+  "landlords": {
+    "L1": {"name": "Morgan Holt", "spend_limit_gbp": "250.00", "approved": ["C-PIPE", "C-VOLT"]},
+    "L2": {"name": "Riverside Homes Ltd", "spend_limit_gbp": "0.00", "approved": ["C-PIPE"]}
+  },
+  "contractors": {
+    "C-PIPE": {"name": "Pipeline Plumbing", "trades": ["plumbing", "heating"], "quotes_gbp": {"plumbing": "95.00", "heating": "180.00"}},
+    "C-VOLT": {"name": "Volt Electrical", "trades": ["electrical"], "quotes_gbp": {"electrical": "420.00"}}
+  },
+  "tenancies": {
+    "T-201": {"landlord": "L1", "property": "Flat 4, 9 Ashgrove Road", "contacts": ["sam.reed@example.com", "+44 7700 900111"], "rent_gbp": "1200.00", "rent_due_day": 1},
+    "T-202": {"landlord": "L2", "property": "12 Mill Lane", "contacts": ["jo.park@example.com"], "rent_gbp": "980.00", "rent_due_day": 15}
+  }
+}

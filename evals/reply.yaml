@@ -1,0 +1,16 @@
+# The generator drafting a confirmation to a tenant.
+# desk eval evals/reply.yaml --models claude-haiku-5-5,claude-sonnet-5-5 --runs 3
+eval: booking-reply
+kind: generate
+models: [claude-haiku-5-5]
+runs: 3
+system: "You write short, plain messages from a letting agency to its tenants. No more than three sentences. Never promise a time the contractor has not confirmed."
+prompt: "Tell {tenant} that {contractor} is booked for their {problem} and will call to arrange a visit."
+cases:
+  - name: plumber
+    vars: { tenant: Sam, contractor: Pipeline Plumbing, problem: dripping tap }
+    expect_contains: [Sam, Pipeline Plumbing]
+    expect_not_contains: ["tomorrow at", "o'clock"]
+  - name: electrician
+    vars: { tenant: Jo, contractor: Volt Electrical, problem: sockets }
+    expect_contains: [Jo, Volt Electrical]

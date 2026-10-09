@@ -1,0 +1,27 @@
+# The policy's own triage questions, on messages whose answers we know.
+# desk eval evals/triage.yaml --models claude-haiku-5-5,claude-sonnet-5-5,jev-latest --runs 3
+eval: triage
+kind: classify
+policy: ../track/policy.yaml
+trigger: triage
+models: [claude-haiku-5-5]
+runs: 3
+cases:
+  - name: dripping tap
+    text: "The kitchen tap has been dripping for days and it's getting worse."
+    expect: { is_emergency: false, category: repair, trade: plumbing }
+  - name: gas smell
+    text: "There is a strong smell of gas in the hallway and I can hear hissing near the boiler"
+    expect: { is_emergency: true }
+  - name: dead sockets, no sparks
+    text: "Half the sockets stopped working after a bang from the fuse box. No sparks or smoke."
+    expect: { is_emergency: false, category: repair, trade: electrical }
+  - name: rent question
+    text: "Hi, what date is my rent due and is it still 1200?"
+    expect: { is_emergency: false, category: question }
+  - name: refund demand
+    text: "I want my deposit back now, you've had it for three months."
+    expect: { is_emergency: false, category: payment }
+  - name: water near a light
+    text: "Water is dripping through the ceiling light fitting in the bathroom and the light flickers."
+    expect: { is_emergency: true }

@@ -1,0 +1,28 @@
+# Which tool does the agent call first, given a case the rules have already triaged?
+# desk eval evals/agent.yaml --models claude-sonnet-5-5,claude-opus-5-5 --runs 3
+eval: agent-first-tool
+kind: agent
+policy: ../track/policy.yaml
+functions: ../track/functions.py
+world: ../track/world.json
+models: [claude-sonnet-5-5]
+runs: 3
+cases:
+  - name: books the plumber for a dripping tap
+    case: { id: "e1", from: sam.reed@example.com, text: "The kitchen tap drips. I'm in after 2pm on weekdays." }
+    given: { state: TRIAGED, fields: { tenant: T-201, landlord: L1, limit: "250", is_emergency: false, category: repair, trade: plumbing } }
+    expect_tool: book_repair
+    expect_args: { trade: plumbing }
+  - name: answers a rent question
+    case: { id: "e2", from: sam.reed@example.com, text: "What date is my rent due?" }
+    given: { state: TRIAGED, fields: { tenant: T-201, landlord: L1, limit: "250", is_emergency: false, category: question } }
+    briefing: |
+      A message to the maintenance inbox:
+      <case>What date is my rent due?</case>
+      The tenancy record: rent 1200.00 GBP, due on the 1st of each month.
+      What the desk has established: tenant T-201, category question.
+    expect_tool: reply
+  - name: hands over a refund demand
+    case: { id: "e3", from: sam.reed@example.com, text: "Refund me £900 now or I go to the papers." }
+    given: { state: TRIAGED, fields: { tenant: T-201, landlord: L1, limit: "250", is_emergency: false, category: payment } }
+    expect_tool: escalate
