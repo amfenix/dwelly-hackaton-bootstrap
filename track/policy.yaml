@@ -22,7 +22,6 @@ fields:
   contractor:   text
   quote:        money
   booked:       bool
-  handover:     { type: text, description: the agent's note for the person who picks the case up }
   reason:       enum [EMERGENCY, UNKNOWN_SENDER, UNCLEAR, OVER_LIMIT, NO_CONTRACTOR, ACTION_FAILED, AGENT_ESCALATED, NOT_HANDLED]
 
 states: [NEW, IDENTIFIED, TRIAGED, QUOTED, DONE, ANSWERED, ESCALATED]
@@ -139,7 +138,6 @@ triggers:
   - name: agent-escalates
     on: escalate
     when: "state != ESCALATED"
-    call: note_handover
     set: { reason: AGENT_ESCALATED }
     to: ESCALATED
 

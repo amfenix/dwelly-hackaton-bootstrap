@@ -61,7 +61,8 @@ cases.json ──► runner ──► one case = one state machine (policy.yaml)
   idempotency key (`retry:`), then the rule's or the policy's `on_error:` decides. An agent that
   stops before the case is closed triggers `on_stall:`. A crash anywhere in a case (its input,
   its rules, the agent) applies `on_error:` and still writes an answer that says where it broke;
-  one broken case never stops the batch.
+  a final state already reached stands, with the failure recorded beside it. One broken case
+  never stops the batch.
 - **The agent's words never become facts or actions unchecked**: a rule compares its arguments
   with the facts (`args.trade = trade`), and text that goes out is written by a function from the
   records — the agent picks *what* to answer, not the words.

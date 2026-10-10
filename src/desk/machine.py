@@ -320,9 +320,10 @@ class Case:
     def fail(self) -> None:
         """The run broke outside any rule: the policy's `on_error` says where the case ends.
 
-        No rule runs after it: whatever broke the run could break it again.
+        No rule runs after it: whatever broke the run could break it again. A final state the policy
+        already reached stands: what was done was done, and the failure is recorded beside it.
         """
-        if self.policy.on_error is not None:
+        if self.policy.on_error is not None and not self.final:
             self._apply(self.policy.on_error, "on_error")
 
     def _write(self, name: str, value: Any, by: str) -> None:

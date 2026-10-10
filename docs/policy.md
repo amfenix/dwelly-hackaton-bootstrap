@@ -86,8 +86,9 @@ limits: { steps: 100 }          # rule firings per case before it counts as a lo
    if that state is not final, `on_stall:` sets one. Write conditions with that in mind.
 7. When something breaks outside a rule's `call:` or `ask:` (bad input, a bug, the agent's model
    down), the policy's `on_error:` still decides where the case ends, no rule runs after it, and
-   the answer says where it broke. Without `on_error:` the answer says the run stopped in a state
-   that is not final.
+   the answer says where it broke. If the case was already in a final state, that state stands:
+   what was done was done, and the failure is recorded beside it. Without `on_error:` the answer
+   says the run stopped in a state that is not final.
 
 ### Conditions
 

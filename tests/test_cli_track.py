@@ -111,7 +111,7 @@ def lines_of(argv: list[str]) -> tuple[int, list[str]]:
 
 def test_check_lists_the_tools(track: Path) -> None:
     code, out = lines_of(["check"])
-    assert code == 0 and out[0].startswith("repairs-desk v1: 11 fields")
+    assert code == 0 and out[0].startswith("repairs-desk v1: 10 fields")
     assert out[1:] == [
         "  tool book_repair(trade, access)",
         "  tool reply(about)",

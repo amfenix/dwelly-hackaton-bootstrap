@@ -92,6 +92,15 @@ def test_the_agent_closes_the_case(mini: Policy) -> None:
     assert result.agent_text == ["ok", "done"] and result.calls["calls"] == 2
 
 
+def test_a_failure_after_a_final_state_keeps_the_outcome(mini: Policy) -> None:
+    replies = [tool_reply(("pay", {"amount": "40"})), RuntimeError("model down")]
+    result = run_case(setup(mini, agent_replies=replies), {"id": "1", "text": "x"}, Recorder())
+    # the payment was made: on_error does not relabel it as failed, the failure is recorded beside it
+    assert result.outcome == "act" and result.state == "DONE" and result.fields["reason"] is None
+    assert result.failure is not None and result.failure.phase == "agent" and result.escalated
+    assert "The run failed:** agent: ModelError: transport: RuntimeError: model down" in answer_md(result)
+
+
 def test_an_agent_that_stops_early_is_handed_on_stall(mini: Policy) -> None:
     result = run_case(setup(mini, agent_replies=[text_reply("no idea")]), {"id": "1", "text": "x"}, Recorder())
     assert result.outcome == "escalate" and result.fields["reason"] == "STALLED"

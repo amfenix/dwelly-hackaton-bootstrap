@@ -99,11 +99,6 @@ def send_reply(ctx: Context) -> dict[str, Any]:
 
 
 @function
-def note_handover(ctx: Context) -> dict[str, Any]:
-    return {"handover": ctx.args["note"]}
-
-
-@function
 def brief(ctx: Any) -> str:
     """What the agent reads first: the message, and the records that matter to it."""
     lines = [
