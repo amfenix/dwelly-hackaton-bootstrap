@@ -144,19 +144,36 @@ def find_sender(ctx: Context) -> dict:
     return {"tenant": tenancy["id"], "limit": tenancy["limit"]}
 ```
 
-| `ctx.` | |
-|---|---|
-| `case` | the case as it came in (read only) |
-| `world` | the records (`--world`, e.g. world.json) |
-| `fields` | the facts known so far (read only) |
-| `args` | the agent's arguments, in a rule with `on:` |
-| `state` | the current state |
-| `key` | one per firing of the rule, the same on its retries: pass it to anything that writes |
-| `attempt` | 1, 2, … |
-| `act(type, **args)` | record an action taken in the world; it becomes an action in ANSWER.md |
-| `note(text)` | a line in REASONING.md |
-| `classify(text, {name: Noul/Choice/Score})` | ask the classifier from code |
-| `generate(system, prompt)` | draft text with Claude |
+| `ctx.` | type | |
+|---|---|---|
+| `case` | mapping, read only | the case as it came in (after `adapt_case`) |
+| `world` | any | the records (`--world`, e.g. world.json); shared, do not change it |
+| `fields` | mapping, read only | the facts known so far; a fact not known yet is `None` |
+| `args` | mapping, read only | the agent's arguments, in a rule with `on:`; empty otherwise |
+| `state` | str | the current state |
+| `key` | str | one per firing of the rule, the same on its retries: pass it to anything that writes |
+| `attempt` | int | 1 on the first try, 2 on the first retry, … |
+| `act(type, **args)` | → None | record an action taken in the world; it becomes an action in ANSWER.md |
+| `note(text)` | → None | a line in REASONING.md |
+| `classify(text, questions)` | → `{name: Answer}` | ask the classifier from code (below) |
+| `generate(system, prompt, model=, max_tokens=)` | → str | draft text with Claude (`--generator-model`) |
+
+Asking the classifier from code, when a rule's `ask:` is not enough:
+
+```python
+from desk.classifier import Choice, Noul, Score
+
+answers = ctx.classify(ctx.case["text"], {
+    "threat": Noul("Does the message threaten anyone?"),
+    "topic": Choice("What is it about?", {"rent": "rent or payments", "repair": "something broken"}),
+    "urgency": Score("How urgent is it?", ("low", "medium", "high")),
+})
+answers["threat"].value     # a probability 0..1 for a Noul, an option for a Choice, a level for a Score
+answers["topic"].confidence # may be None
+```
+
+`classify` and `generate` raise when the model fails; the rule's `retry:` and `on_error:` handle it,
+as for any other error.
 
 Rules for a function:
 

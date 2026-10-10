@@ -167,6 +167,7 @@ track/           the track: policy.yaml, functions.py, world.json, cases.json
 evals/           evals on real models: classifier wording, the agent's first tool, generated text
 tests/           unit and end-to-end tests on fakes (no network)
 docs/policy.md   how to write the policy and the functions
+docs/quickstart.md   what to edit and the commands to start and iterate
 ```
 
 ## Working on the desk
